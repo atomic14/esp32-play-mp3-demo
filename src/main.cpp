@@ -4,6 +4,7 @@
 #include <freertos/task.h>
 #include <config.h>
 #include <I2SOutput.h>
+#include <DACOutput.h>
 #define MINIMP3_IMPLEMENTATION
 #define MINIMP3_ONLY_MP3
 #include "minimp3.h"
@@ -21,10 +22,26 @@ void wait_for_button_push()
   }
 }
 
+const int BUFFER_SIZE = 16384;
+
 void play_task(void *param)
 {
-  // create the I2S output - see config.h for settings
-  I2SOutput *output = new I2SOutput(I2S_NUM_0, i2s_speaker_pins);
+#ifdef VOLUME_CONTROL
+  // set up the ADC for reading the volume control
+  adc1_config_width(ADC_WIDTH_12Bit);
+  adc1_config_channel_atten(ADC1_CHANNEL_7, ADC_ATTEN_DB_11);
+#endif
+  // create the output - see config.h for settings
+#ifdef USE_I2S
+  Output *output = new I2SOutput(I2S_NUM_0, i2s_speaker_pins);
+#else
+  Output *output = new DACOutput();
+#endif
+#ifdef I2S_SPEAKDER_SD_PIN
+  // if you I2S amp has a SD pin, you'll need to turn it on
+  gpio_set_direction(I2S_SPEAKDER_SD_PIN, GPIO_MODE_OUTPUT);
+  gpio_set_level(I2S_SPEAKDER_SD_PIN, 1);
+#endif
   // setup the button to trigger playback - see config.h for settings
   gpio_set_direction(GPIO_BUTTON, GPIO_MODE_INPUT);
   gpio_set_pull_mode(GPIO_BUTTON, GPIO_PULLUP_ONLY);
@@ -32,7 +49,7 @@ void play_task(void *param)
   SPIFFS spiffs("/fs");
   // setup for the mp3 decoded
   short *pcm = (short *)malloc(sizeof(short) * MINIMP3_MAX_SAMPLES_PER_FRAME);
-  uint8_t *input_buf = (uint8_t *)malloc(4096);
+  uint8_t *input_buf = (uint8_t *)malloc(BUFFER_SIZE);
   if (!pcm)
   {
     ESP_LOGE("main", "Failed to allocate pcm memory");
@@ -45,13 +62,12 @@ void play_task(void *param)
   {
     // wait for the button to be pushed
     wait_for_button_push();
-    ESP_LOGI("main", "Button pushed");
     // mp3 decoder state
     mp3dec_t mp3d = {};
     mp3dec_init(&mp3d);
     mp3dec_frame_info_t info = {};
     // keep track of how much data we have buffered, need to read and decoded
-    int to_read = 4096;
+    int to_read = BUFFER_SIZE;
     int buffered = 0;
     int decoded = 0;
     bool is_output_started = false;
@@ -64,6 +80,10 @@ void play_task(void *param)
     }
     while (1)
     {
+#ifdef VOLUME_CONTROL
+      auto adc_value = adc1_get_raw(VOLUME_CONTROL);
+      output->set_volume(adc_value);
+#endif
       // read in the data that is needed to top up the buffer
       size_t n = fread(input_buf + buffered, 1, to_read, fp);
       // feed the watchdog
