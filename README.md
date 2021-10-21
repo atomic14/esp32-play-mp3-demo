@@ -1,4 +1,4 @@
-![build status](https://github.com/atomic14/esp32-play-mp3-demo/actions/workflows/build-test-on-push.yml/badge.svg)
+[![Build on push](https://github.com/cgreening/esp32-play-mp3-demo/actions/workflows/build-test-on-push.yml/badge.svg)](https://github.com/cgreening/esp32-play-mp3-demo/actions/workflows/build-test-on-push.yml)
 
 # ESP32 MP3 Player
 
