@@ -1,7 +1,8 @@
 #include <freertos/FreeRTOS.h>
 #include <driver/i2s.h>
 
-// #define USE_I2S
+// comment this out if you want to use the internal DAC
+#define USE_I2S
 
 // speaker settings - if using I2S
 #define I2S_SPEAKER_SERIAL_CLOCK GPIO_NUM_19

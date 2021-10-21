@@ -1,4 +1,4 @@
-![build status](https://github.com/atomic14/esp32-mp3-demo/actions/workflows/build-test-on-push.yml/badge.svg)
+![build status](https://github.com/atomic14/esp32-play-mp3-demo/actions/workflows/build-test-on-push.yml/badge.svg)
 
 # ESP32 MP3 Player
 
@@ -13,6 +13,8 @@ In theory you should have a DC blocking capacitor between the output and headpho
 When using the DAC the left channel will be output on GPIO26 and the right channel will be output on GPIO25.
 
 I've added an optional volume control. You can connect a potentiometer between 3.3v and ground and connect it to one of the ADC channels.
+
+Make sure you upload the filesystem as the sample mp3 file is stored on SPIFFS.
 
 ## Configuration
 
