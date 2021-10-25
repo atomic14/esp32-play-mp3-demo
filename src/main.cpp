@@ -23,7 +23,7 @@ void wait_for_button_push()
   }
 }
 
-const int BUFFER_SIZE = 16384;
+const int BUFFER_SIZE = 1024;
 
 void play_task(void *param)
 {
