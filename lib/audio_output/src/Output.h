@@ -12,7 +12,7 @@ protected:
   i2s_port_t m_i2s_port = I2S_NUM_0;
 
   int16_t *frames_buffer;
-  int volume = 4096;
+  float volume = 1.0f;
 
 public:
   Output(i2s_port_t i2s_port);
@@ -26,7 +26,7 @@ public:
   // NOTE - a frame consists of both a left and a right sample
   void write(int16_t *samples, int frames);
   // set the volume between 0 and 4096
-  void set_volume(int volume)
+  void set_volume(float volume)
   {
     this->volume = volume;
   }

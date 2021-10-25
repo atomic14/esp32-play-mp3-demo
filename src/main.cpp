@@ -81,8 +81,10 @@ void play_task(void *param)
     while (1)
     {
 #ifdef VOLUME_CONTROL
-      auto adc_value = adc1_get_raw(VOLUME_CONTROL);
-      output->set_volume(adc_value);
+      auto adc_value = float(adc1_get_raw(VOLUME_CONTROL)) / 4096.0f;
+      // make the actual volume match how people hear
+      // https://ux.stackexchange.com/questions/79672/why-dont-commercial-products-use-logarithmic-volume-controls
+      output->set_volume(adc_value * adc_value);
 #endif
       // read in the data that is needed to top up the buffer
       size_t n = fread(input_buf + buffered, 1, to_read, fp);
