@@ -2,7 +2,13 @@
 
 # ESP32 MP3 Player
 
+You can watch a video explanation of this code [here](https://youtu.be/kdKnddqCJbY)
+
+[![Demo Video](https://img.youtube.com/vi/kdKnddqCJbY/0.jpg)](https://www.youtube.com/watch?v=kdKnddqCJbY)
+
 This repo contains a simple demonstration of how to play an MP3 file on the ESP32.
+
+You'll need to use PlatformIO to run the code but you should be able to take the code accross to Arduino quite easily.
 
 You can configure the output to be either an I2S device or the built-in DAC to output the audio to a set of headphones or an analogue amplifier.
 
