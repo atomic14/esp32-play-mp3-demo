@@ -29,7 +29,7 @@ void play_task(void *param)
 {
 #ifdef VOLUME_CONTROL
   // set up the ADC for reading the volume control
-  adc1_config_width(ADC_WIDTH_12Bit);
+  adc1_config_width(ADC_WIDTH_BIT_12);
   adc1_config_channel_atten(ADC1_CHANNEL_7, ADC_ATTEN_DB_11);
 #endif
   // create the output - see config.h for settings
